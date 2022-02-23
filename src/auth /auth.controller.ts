@@ -14,7 +14,7 @@ export class AuthController {
     return this.authService.signup();
   }
 
-  @Post('signin') 
+  @Post('signin')
   signin() {
     return this.authService.signin;
   }
