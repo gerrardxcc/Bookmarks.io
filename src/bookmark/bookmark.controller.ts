@@ -1,7 +1,9 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   UseGuards,
@@ -9,6 +11,7 @@ import {
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { BookmarkService } from './bookmark.service';
+import { CreateBookmarkDto } from './dto';
 
 @UseGuards(JwtGuard)
 @Controller('bookmarks')
@@ -17,17 +20,40 @@ export class BookmarkController {
     private bookmarkService: BookmarkService,
   ) {}
   @Get()
-  getBookmarks(@GetUser('id') userId: number) {}
+  getBookmarks(@GetUser('id') userId: number) {
+    return this.bookmarkService.getBookmarks(
+      userId,
+    );
+  }
 
-  @Get()
-  getBookmarkById(@GetUser('id') userId: number) {}
+  @Get(':id')
+  getBookmarkById(
+    @GetUser('id') userId: number,
+    @Param('id', ParserIntPipe)
+    bookmarkId: number,
+  ) {
+    return this.bookmarkService.getBookmarkById(
+      userId,
+      bookmarkId,
+    );
+  }
 
   @Post()
-  createBookmark(@GetUser('id') userId: number) {}
+  createBookmark(
+    @GetUser('id') userId: number,
+    @Body() dto: CreateBookmarkDto,
+  ) {}
 
   @Patch()
-  editBookmarkById(@GetUser('id') userId: number) {}
+  editBookmarkById(
+    @GetUser('id') userId: number,
+    @Body() dto: EditBookmarkDto,
+  ) {}
 
-  @Delete()
-  deleteBookmarkById(@GetUser('id') userId: number) {}
+  @Delete(':id')
+  deleteBookmarkById(
+    @GetUser('id') userId: number,
+    @Param('id', ParserIntPipe)
+    bookmarkId: number,
+  ) {}
 }
